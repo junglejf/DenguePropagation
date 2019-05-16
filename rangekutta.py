@@ -7,6 +7,12 @@ def escalarXvetor(e, v):
         v[i] = e*v[i]
     return v
 
+def subvetor(v1,v2):
+    resp = []
+    for i in range (0,len(v1)):
+        resp.append(v1[i]-v2[i])
+    return resp
+
 def somaVetor (v1, v2):
     resp = []
     for i in range(0, len(v1)):
@@ -53,6 +59,23 @@ def fd(tc,yo,yFb,h):
 
     return yFd
 
+def f(t,yo,h):
+    yFa = fa(t,yo)
+    #print(yFa)
+    yFb = fb(yo,h,yFa)
+    #print(yFb)
+    tc = fc(t,h) 
+    #print(tc)
+    yFd = fd(tc,yo,yFb,h)
+    #print(yFd)
+    return yFd
+
+def kutta_exp (yk,h,fj, fi):
+    y1 = escalarXvetor(3,fj)
+    y2 = subvetor(y1,fi)
+    y3 = escalarXvetor(h/2, y2)
+    yn = somaVetor(yk,y3)
+    return yn
 
 ##############################
 ######## Programa ############
@@ -98,11 +121,30 @@ print("\n ### Passo [C] ### \n " + str(tc))
 yFD = fd(tc,y0,yFB,h)
 print("\n ### Passo [D] ### \n " + str(yFD) + "\n")
 
-#Cáculo do RageKutta após D
+#Cálculo do RageKutta Y1 após D
 rkt = somaVetor(escalarXvetor(h,yFD) , y0)
-print("Y = "+str(rkt)+"\n")
+f_vet = f(t,y0,h)
+rkt2 = kutta(y0,h,f_vet)
+print("Kutta - Y1 = "+str(rkt)+" = "+str(rkt2)+"\n")
+
+#Cálculo do RageKutta Y2 
+t = h
+f_vet2 = f(t,rkt,h)
+rkt3 = kutta(rkt,h,f_vet2)
+print("Kutta - Y2 = "+str(rkt3)+"\n")
+
+
+#Cálculo do kutta explíctio
+ykn = [-11000,300]
+rktExp = kutta_exp(y0,h,rkt3,rkt2)
+print("KuttaExp - Y2 = "+ str(rktExp)+'\n')
 
 ### Equações do nosso trabalho ###
+## - Modelo de 3a ordem - ##
 #dS/dt = −βSI  = -axy
 #dI/dt = βSI − cI = axy - cy
 #dR/dt = cI = cy
+
+## - Modelo de 2a ordem - ##
+#dS/dt = −βSI + γI + μN − δS  = -bxy + a(x+y) + cx 
+#dI/dt = βSI − γI − δI = bxy - ay - cy
