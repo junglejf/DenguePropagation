@@ -49,12 +49,8 @@ def fd(tc,yo,yFb,h):
 
     f1 = 100*yFb[0] - 0.37*yFb[0]*yFb[1]
     f2 = -100*yFb[1] + 0.05*yFb[0]*yFb[1]
-    f_vetor = [f1,f2]
+    yFd = [f1,f2]
 
-    y1 = yo[0] +  ( h * f1 )
-    y2 = yo[1] +  ( h * f2 )
-
-    yFd = [y1,y2]
     return yFd
 
 
@@ -77,11 +73,13 @@ y = Symbol ('y')
 h = 0.002
 y1 = 1000
 y2 = 300
-f1 = [100*y1 - 0.37*y1*y2]
-f2 = [-100*y2 + 0.05*y1*y2]
+f1 = Eq(100*y , 0.37*y*x)
+f2 = Eq(-100*x + 0.05*x*y)
+#Exemplo usando a biblioteca Funções
 eq = solve ([8*x - 5*y + 8  ,  2*x + 5*y],[x,y])
 y0 = [y1,y2]
-print (eq)
+eqn = Eq(y*(8.0 - y**3), 8.0)
+print (eqn)
 print ()
 
 #Passo A
@@ -98,6 +96,13 @@ print("\n ### Passo [C] ### \n " + str(tc))
 
 #Passo D
 yFD = fd(tc,y0,yFB,h)
-print("\n ### Passo [D] ### \n " + str(yFD))
+print("\n ### Passo [D] ### \n " + str(yFD) + "\n")
 
-#print(solve([x + 5*y - 2, -3*x + 6*y - 15], [x, y]))
+#Cáculo do RageKutta após D
+rkt = somaVetor(escalarXvetor(h,yFD) , y0)
+print("Y = "+str(rkt)+"\n")
+
+### Equações do nosso trabalho ###
+#dS/dt = −βSI  = -axy
+#dI/dt = βSI − cI = axy - cy
+#dR/dt = cI = cy
