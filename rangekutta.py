@@ -70,11 +70,17 @@ def f(t,yo,h):
     #print(yFd)
     return yFd
 
-def kutta_exp (yk,h,fj, fi):
-    y1 = escalarXvetor(3,fj)
-    y2 = subvetor(y1,fi)
+def kutta_exp (yk,h,f1,f0, y0):
+    print(f1)
+    y1 = escalarXvetor(3,f1)
+    print(y1)
+    y2 = subvetor(y1,f0)
+    print(y2)
     y3 = escalarXvetor(h/2, y2)
+    print(y3)
     yn = somaVetor(yk,y3)
+    
+    #kutta_exp(yn,h,f0,f(t,y0,h),y1)
     return yn
 
 ##############################
@@ -89,28 +95,18 @@ v2 = [-5390.05, -14406.80]
 
 #testeando F
 t = 0
-a = Symbol('y')
-b = Symbol ('y')
-x = Symbol('x')
-y = Symbol ('y')
 h = 0.002
-y1 = 1000
-y2 = 300
-f1 = Eq(100*y , 0.37*y*x)
-f2 = Eq(-100*x + 0.05*x*y)
+y01 = 1000
+y02 = 300
 #Exemplo usando a biblioteca Funções
-eq = solve ([8*x - 5*y + 8  ,  2*x + 5*y],[x,y])
-y0 = [y1,y2]
-eqn = Eq(y*(8.0 - y**3), 8.0)
-print (eqn)
-print ()
+Y0 = [y01,y02]
 
 #Passo A
-yFA = fa(0,y0) 
+yFA = fa(0,Y0) 
 print("\n ### Passo [A] ### \n " + str(yFA))
 
 #Passo B
-yFB = fb(y0,h,yFA) 
+yFB = fb(Y0,h,yFA) 
 print("\n ### Passo [B] ### \n " + str(yFB))
 
 #Passo C
@@ -118,26 +114,28 @@ tc = fc(t,h)
 print("\n ### Passo [C] ### \n " + str(tc))
 
 #Passo D
-yFD = fd(tc,y0,yFB,h)
+yFD = fd(tc,Y0,yFB,h)
 print("\n ### Passo [D] ### \n " + str(yFD) + "\n")
 
 #Cálculo do RageKutta Y1 após D
-rkt = somaVetor(escalarXvetor(h,yFD) , y0)
-f_vet = f(t,y0,h)
-rkt2 = kutta(y0,h,f_vet)
-print("Kutta - Y1 = "+str(rkt)+" = "+str(rkt2)+"\n")
+#Y1 = somaVetor(escalarXvetor(h,yFD) , y0)
+f_vet = f(t,Y0,h)
+Y1 = kutta(Y0,h,f_vet)
+print("Kutta - Y1 = "+str(Y1)+"\n")
 
 #Cálculo do RageKutta Y2 
-t = h
-f_vet2 = f(t,rkt,h)
-rkt3 = kutta(rkt,h,f_vet2)
-print("Kutta - Y2 = "+str(rkt3)+"\n")
+#t = h
+#f_vet2 = f(t,Y1,h)
+#rkt3 = kutta(Y1,h,f_vet2)
+#print("Kutta - Y2 = "+str(rkt3)+"\n")
 
 
-#Cálculo do kutta explíctio
-ykn = [-11000,300]
-rktExp = kutta_exp(y0,h,rkt3,rkt2)
-print("KuttaExp - Y2 = "+ str(rktExp)+'\n')
+# Cálculo do kutta explíctio
+Y2 = kutta_exp (Y1,h,fa(t,Y1),fa(t,Y0), Y0)
+print("Kutta Exp - Y2 = "+str(Y2)+"\n")
+
+#rktExp = kutta_exp(Y0,h,Y1,Y0,Y0)
+#print("KuttaExp - Y2 = "+ str(rktExp)+'\n')
 
 ### Equações do nosso trabalho ###
 ## - Modelo de 3a ordem - ##
