@@ -40,8 +40,8 @@ def kutta(yk, h, f):
     return somaVetor(yk, v1)
 
 ## - Modelo de 2a ordem - Modelo SIS - suscetível, infectado e suscetível , página 36 ##
-# dS/dt = −βSI + γI + μ(S+I) − δS   
-# dI/dt = βSI − γI − δI 
+# f1 = dS/dt = −βSI + γI + μ(S+I) − δS  
+# f2 = dI/dt = βSI − γI − δI  
 # S é a população de indivíduos suscetíveis
 # I é a população de indivíduos infectados
 
