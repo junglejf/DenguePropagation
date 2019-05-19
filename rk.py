@@ -1,4 +1,16 @@
 ##############################
+##### Variaveis Globais ######
+##############################
+
+## Array de Coeficientes
+# coeficientes = [β,γ,μ,δ]
+# β é a taxa de contato entre suscetíveis e infectados
+# γ é a taxa de recuperação
+# μ é a taxa de natalidade
+# δ é a taxa de mortalidade
+coef = [10,20,300,-40]
+
+##############################
 ######## Funcoes #############
 ##############################
 
@@ -27,11 +39,20 @@ def kutta(yk, h, f):
     v1 = escalarXvetor(h, f)
     return somaVetor(yk, v1)
 
+## - Modelo de 2a ordem - Modelo SIS - suscetível, infectado e suscetível , página 36 ##
+# dS/dt = −βSI + γI + μ(S+I) − δS   
+# dI/dt = βSI − γI − δI 
+# S é a população de indivíduos suscetíveis
+# I é a população de indivíduos infectados
 
 ##Esta eh a funcao que define as funcoes do problema
 def f(t,y):
-    f1 = 100*y[0] - 0.37*y[0]*y[1]
-    f2 = -100*y[1] + 0.05*y[0]*y[1]
+    global coef 
+    # coef = [β,γ,μ,δ]
+    # y =[S,I]
+    # Essa é a SIS
+    f1 = -coef[0]*y[0]*y[1] + coef[1]*y[1] + coef[2]*(y[0] + y[1]) - coef[3]*y[0]
+    f2 = coef[0]*y[0]*y[1] - coef[1]*y[1] - coef[3]*y[1]
     yFa = [f1,f2]
     return yFa
 
@@ -64,8 +85,8 @@ def kutta_exp (yk, fk, h, y0, f0, t, x):
 ##Inicializacao das variaveis
 t = 0
 h = 0.002
-y01 = 1000
-y02 = 300
+y01 = 100
+y02 = 30
 
 Y0 = [y01,y02]
 
