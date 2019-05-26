@@ -4,6 +4,57 @@
 
 import os
 
+# LISTA DE EQUAÇÕES PÁGINAS 44 E 45 (FALTA TERMINAR):
+
+# d(Et)dt = coef[0] * [1 - (Et / C')] * Wt - (coef[1] + coef[4]) * Et        # Página 44, equação E(t)
+#
+# d(Lt)dt = coef[1] * Et - (coef[2] + coef[5] + coef[10]) * Lt        # Página 44, equação L(t)
+#
+# d(Pt)dt = coef[2] * Lt - (coef[3] + coef[6] + coef[11]) * Pt        # Página 44, equação P(t)
+#
+# d(W1t)dt = coef[3] * Pt - (coef[13] * (It / N) + coef[7] + coef[12]) * W1t        # Página 44, equação W1(t)
+#
+# d(W2t)dt = coef[13] * (It / N) * W1t - (coef[15] + coef[7] + coef[12]) * W2t        # Página 44, equação W2(t)
+#
+# d(W3t)dt = coef[15] * W2t - (coef[7] + coef[12]) * W3t        # Página 44, equação W3(t)
+#
+# d(st)dt = coef[19] * N - [coef[14] * (W3t / Wt) + coef[18]] * St        # Página 45, equação s(t)
+#
+# d(et)dt = coef[14] * (W3t / Wt) * St - (coef[16] + coef[18]) * Et        # Página 45, equação e(t)
+#
+# d(it)dt = coef[16] * Et - (coef[17] + coef[18]) * It        # Página 45, equação i(t)
+#
+# d(rt)dt = coef[17] * It - coef[18] * Rt        # Página 45, equação r(t)
+
+# ATENÇÃO: F = Período Favorável; D = Período Desfavorável; I = Período Intermediário.
+# Usei Período Favorável em todas as equações que usavam Mortalidade Mosquito Alado (?w) = coef[7]
+# Página 46, Tabela 1 (Tabela de parâmetros)
+
+# coef[0] = ? => Ovoposição
+# coef[1] = ?e => Ovo ? Larva(F) ou Ovo ? Larva(D) ou Ovo ? Larva(I)
+# coef[2] = ?l => Larva ? Pupa(F) ou Larva ? Pupa(D) ou Larva ? Pupa(I)
+# coef[3] = ?p => Pupa ? Alado(F) ou Pupa ? Alado(D) ou Pupa ? Alado(I)
+# coef[4] = ?e => Mortalidade de Ovo
+# coef[5] = ?l => Mortalidade de Larva
+# coef[6] = ?p => Mortalidade de Pupa
+# coef[7] = ?w(F) => Mortalidade Mosquito Alado(F)
+# coef[8] = ?w(D) => Mortalidade Mosquito Alado(D)
+# coef[9] = ?w(I) => Mortalidade Mosquito Alado(I)
+# coef[10] = ?'l => Mortalidade - Larvicida
+# coef[11] = ?'p => Mortalidade - "Pupicida"
+# coef[12] = ?'w => Mortalidade - Inseticida
+# coef[13] = ?w => Transmissão Mosquito - Humano
+# coef[14] = ?h => Transmissão Humano - Mosquito
+# coef[15] = ?w => Mosquito exposto ? infectado
+# coef[16] = ?h => Humano exposto ? infectado
+# coef[17] = ?h => Humano Infectado ? Removido
+# coef[18] = ?h => Mortalidade Humanos
+# coef[19] = ?n => Natalidade Humanos
+
+
+# ARRAY DE PARÂMETROS COM OS VALORES EXTRAÍDOS DA TABELA 1 DA PÁGINA 46:
+# coef = [1, 0.33, 0.3, 0.2, 0.14, 0.125, 0.066, 0.346, 0.323, 0.0091, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0, 0, 0, 0.75, 0.375, 0.2, 0.1, 0.143, 0.000042], 0.00042
+
 
 
 ##############################
