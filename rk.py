@@ -1,3 +1,11 @@
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
+
+
+import os
+
+
+
 ##############################
 ##### Variaveis Globais ######
 ##############################
@@ -10,9 +18,20 @@
 # δ é a taxa de mortalidade
 coef = [10,20,300,-40]
 
+
+
 ##############################
 ######## Funcoes #############
 ##############################
+def remove_file():
+    os.remove("valores.csv")
+
+def write_file(a):
+    f = open("valores.csv", "a")
+    for i in range (0, len(a)-1):
+        f.write(str(a[i]) + ';')
+    f.write(str(a[len(a) -1]) + '\n')
+    f.close()
 
 ##Funcao que multiplica um vetor por um escalar
 def escalarXvetor(e, v):
@@ -63,7 +82,9 @@ def range_kutta(y, h, t):
     b = kutta(y, h/2, a)
     c = t + h/2
     d = f(c, b)
-    return kutta(y, h, d)
+    y1 = kutta(y, h, d)
+    write_file(y1)
+    return y1
 
 #Metodo explicito.
 #YK Atual, FK Atual, H, Y anterior, F anterior
@@ -75,12 +96,15 @@ def kutta_exp (yk, fk, h, y0, f0, t, x):
         yn = somaVetor(yk,y3)
         print("Y"+ str(x) + ":")
         print(yn)
+        write_file(yn)
         kutta_exp(yn, f(t, yn), h, yk, f(t,yk), t, x+1)
         
 
 ##############################
 ######## Programa ############
 ##############################
+
+remove_file()
 
 ##Inicializacao das variaveis
 t = 0
