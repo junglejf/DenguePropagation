@@ -56,19 +56,35 @@ import os
 coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0, 0.0, 0.75, 0.375, 0.2, 0.1, 0.143, 0.000042, 0.00042]
 
 
-
 ##############################
-##### Variaveis Globais ######
+#Inicializacao das variaveis#
 ##############################
 
-## Array de Coeficientes
-# coeficientes = [Î²,Î³,Î¼,Î´]
-# Î² Ã© a taxa de contato entre suscetÃ­veis e infectados
-# Î³ Ã© a taxa de recuperaÃ§Ã£o
-# Î¼ Ã© a taxa de natalidade
-# Î´ Ã© a taxa de mortalidade
-#coef = [10,20,300,-40]
 
+#Valores iniciais
+
+t = 0
+h = 0.02
+
+Et = 100
+Lt = 200
+Pt = 300
+W1t = 100
+W2t = 100
+W3t = 200
+Wt = W1t + W2t + W3t
+St = 2
+It = 3 
+Rt = 4
+
+Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t), float(Wt), float(St), float(It), float(Rt)]
+
+
+Cfixo = 700.0     #Valor referente ao periodo favoravel
+Ci = 0.00000044         #Valor do teorema do chute
+Clinha = Cfixo * Ci     #capacidade de suporte ambiental
+
+N = 500000.0 #Populacao humana
 
 
 ##############################
@@ -108,22 +124,6 @@ def somaVetor (v1, v2):
 def kutta(yk, h, f):
     v1 = escalarXvetor(h, f)
     return somaVetor(yk, v1)
-
-## - Modelo de 2a ordem - Modelo SIS - suscetÃ­vel, infectado e suscetÃ­vel , pÃ¡gina 36 ##
-# f1 = dS/dt = âˆ’Î²SI + Î³I + Î¼(S+I) âˆ’ Î´S  
-# f2 = dI/dt = Î²SI âˆ’ Î³I âˆ’ Î´I  
-# S Ã© a populaÃ§Ã£o de indivÃ­duos suscetÃ­veis
-# I Ã© a populaÃ§Ã£o de indivÃ­duos infectados
-
-#Y0 = [Et, Lt, Pt, W1t, W2t, W3t, Wt, St, It, Rt]
-
-Cfixo = 700.0     #Valor referente ao periodo favoravel
-Ci = 0.00000044         #Valor do teorema do chute
-Clinha = Cfixo * Ci
-
-N = 500000.0
-
-
 
 def f(t, y):
     print(t)
@@ -173,31 +173,8 @@ def kutta_exp (yk, fk, h, y0, f0, t, x):
 
 remove_file()
 
-##Inicializacao das variaveis
-
-
-t = 0
-h = 0.02
-
-Et = 100
-Lt = 200
-Pt = 300
-W1t = 100
-W2t = 100
-W3t = 200
-Wt = W1t + W2t + W3t
-St = 2
-It = 3 
-Rt = 4
-
-
-
-Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t), float(Wt), float(St), float(It), float(Rt)]
-
-
 #Com um passo eu resolvo range Kutta de segunda ordem
 Y1 = range_kutta(Y0, h, t)
-
 
 print("Y0: ")
 print(Y0)
