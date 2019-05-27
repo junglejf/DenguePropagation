@@ -4,36 +4,36 @@
 
 import os
 
-# LISTA DE EQUA��ES P�GINAS 44 E 45 (FALTA TERMINAR):
+# LISTA DE EQUAÇÕES PÁGINAS 44 E 45 (FALTA TERMINAR):
 
-# d(Et)dt = coef[0] * [1 - (Et / C')] * Wt - (coef[1] + coef[4]) * Et        # P�gina 44, equa��o E(t)
+# d(Et)dt = coef[0] * [1 - (Et / C')] * Wt - (coef[1] + coef[4]) * Et        # Página 44, equação E(t)
 #
-# d(Lt)dt = coef[1] * Et - (coef[2] + coef[5] + coef[10]) * Lt        # P�gina 44, equa��o L(t)
+# d(Lt)dt = coef[1] * Et - (coef[2] + coef[5] + coef[10]) * Lt        # Página 44, equação L(t)
 #
-# d(Pt)dt = coef[2] * Lt - (coef[3] + coef[6] + coef[11]) * Pt        # P�gina 44, equa��o P(t)
+# d(Pt)dt = coef[2] * Lt - (coef[3] + coef[6] + coef[11]) * Pt        # Página 44, equação P(t)
 #
-# d(W1t)dt = coef[3] * Pt - (coef[13] * (It / N) + coef[7] + coef[12]) * W1t        # P�gina 44, equa��o W1(t)
+# d(W1t)dt = coef[3] * Pt - (coef[13] * (It / N) + coef[7] + coef[12]) * W1t        # Página 44, equação W1(t)
 #
-# d(W2t)dt = coef[13] * (It / N) * W1t - (coef[15] + coef[7] + coef[12]) * W2t        # P�gina 44, equa��o W2(t)
+# d(W2t)dt = coef[13] * (It / N) * W1t - (coef[15] + coef[7] + coef[12]) * W2t        # Página 44, equação W2(t)
 #
-# d(W3t)dt = coef[15] * W2t - (coef[7] + coef[12]) * W3t        # P�gina 44, equa��o W3(t)
+# d(W3t)dt = coef[15] * W2t - (coef[7] + coef[12]) * W3t        # Página 44, equação W3(t)
 #
-# d(st)dt = coef[19] * N - [coef[14] * (W3t / Wt) + coef[18]] * St        # P�gina 45, equa��o s(t)
+# d(st)dt = coef[19] * N - [coef[14] * (W3t / Wt) + coef[18]] * St        # Página 45, equação s(t)
 #
-# d(et)dt = coef[14] * (W3t / Wt) * St - (coef[16] + coef[18]) * Et        # P�gina 45, equa��o e(t)
+# d(et)dt = coef[14] * (W3t / Wt) * St - (coef[16] + coef[18]) * Et        # Página 45, equação e(t)
 #
-# d(it)dt = coef[16] * Et - (coef[17] + coef[18]) * It        # P�gina 45, equa��o i(t)
+# d(it)dt = coef[16] * Et - (coef[17] + coef[18]) * It        # Página 45, equação i(t)
 #
-# d(rt)dt = coef[17] * It - coef[18] * Rt        # P�gina 45, equa��o r(t)
+# d(rt)dt = coef[17] * It - coef[18] * Rt        # Página 45, equação r(t)
 
-# ATEN��O: F = Per�odo Favor�vel; D = Per�odo Desfavor�vel; I = Per�odo Intermedi�rio.
-# Usei Per�odo Favor�vel em todas as equa��es que usavam Mortalidade Mosquito Alado (?w) = coef[7]
-# P�gina 46, Tabela 1 (Tabela de par�metros)
+# ATENÇÃO: F = Período Favorável; D = Período Desfavorável; I = Período Intermediário.
+# Usei Período Favorável em todas as equações que usavam Mortalidade Mosquito Alado (?w) = coef[7]
+# Página 46, Tabela 1 (Tabela de parâmetros)
 
-# coef[0] = ? => Ovoposi��o
-# coef[1] = ?e => Ovo ? Larva(F) ou Ovo ? Larva(D) ou Ovo ? Larva(I)
-# coef[2] = ?l => Larva ? Pupa(F) ou Larva ? Pupa(D) ou Larva ? Pupa(I)
-# coef[3] = ?p => Pupa ? Alado(F) ou Pupa ? Alado(D) ou Pupa ? Alado(I)
+# coef[0] = ? => Ovoposição
+# coef[1] = ?e => Ovo ? Larva(F)
+# coef[2] = ?l => Larva ? Pupa(F)
+# coef[3] = ?p => Pupa ? Alado(F)
 # coef[4] = ?e => Mortalidade de Ovo
 # coef[5] = ?l => Mortalidade de Larva
 # coef[6] = ?p => Mortalidade de Pupa
@@ -43,8 +43,8 @@ import os
 # coef[10] = ?'l => Mortalidade - Larvicida
 # coef[11] = ?'p => Mortalidade - "Pupicida"
 # coef[12] = ?'w => Mortalidade - Inseticida
-# coef[13] = ?w => Transmiss�o Mosquito - Humano
-# coef[14] = ?h => Transmiss�o Humano - Mosquito
+# coef[13] = ?w => Transmissão Mosquito - Humano
+# coef[14] = ?h => Transmissão Humano - Mosquito
 # coef[15] = ?w => Mosquito exposto ? infectado
 # coef[16] = ?h => Humano exposto ? infectado
 # coef[17] = ?h => Humano Infectado ? Removido
@@ -52,8 +52,8 @@ import os
 # coef[19] = ?n => Natalidade Humanos
 
 
-# ARRAY DE PAR�METROS COM OS VALORES EXTRA�DOS DA TABELA 1 DA P�GINA 46:
-# coef = [1, 0.33, 0.3, 0.2, 0.14, 0.125, 0.066, 0.346, 0.323, 0.0091, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0, 0, 0, 0.75, 0.375, 0.2, 0.1, 0.143, 0.000042], 0.00042
+# ARRAY DE PARÂMETROS COM OS VALORES EXTRAÍDOS DA TABELA 1 DA PÁGINA 46:
+coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0, 0.0, 0.75, 0.375, 0.2, 0.1, 0.143, 0.000042, 0.00042]
 
 
 
@@ -62,12 +62,12 @@ import os
 ##############################
 
 ## Array de Coeficientes
-# coeficientes = [β,γ,μ,δ]
-# β é a taxa de contato entre suscetíveis e infectados
-# γ é a taxa de recuperação
-# μ é a taxa de natalidade
-# δ é a taxa de mortalidade
-coef = [10,20,300,-40]
+# coeficientes = [Î²,Î³,Î¼,Î´]
+# Î² Ã© a taxa de contato entre suscetÃ­veis e infectados
+# Î³ Ã© a taxa de recuperaÃ§Ã£o
+# Î¼ Ã© a taxa de natalidade
+# Î´ Ã© a taxa de mortalidade
+#coef = [10,20,300,-40]
 
 
 
@@ -109,18 +109,43 @@ def kutta(yk, h, f):
     v1 = escalarXvetor(h, f)
     return somaVetor(yk, v1)
 
-## - Modelo de 2a ordem - Modelo SIS - suscetível, infectado e suscetível , página 36 ##
-# f1 = dS/dt = −βSI + γI + μ(S+I) − δS  
-# f2 = dI/dt = βSI − γI − δI  
-# S é a população de indivíduos suscetíveis
-# I é a população de indivíduos infectados
+## - Modelo de 2a ordem - Modelo SIS - suscetÃ­vel, infectado e suscetÃ­vel , pÃ¡gina 36 ##
+# f1 = dS/dt = âˆ’Î²SI + Î³I + Î¼(S+I) âˆ’ Î´S  
+# f2 = dI/dt = Î²SI âˆ’ Î³I âˆ’ Î´I  
+# S Ã© a populaÃ§Ã£o de indivÃ­duos suscetÃ­veis
+# I Ã© a populaÃ§Ã£o de indivÃ­duos infectados
+
+#Y0 = [Et, Lt, Pt, W1t, W2t, W3t, Wt, St, It, Rt]
+
+Cfixo = 700.0     #Valor referente ao periodo favoravel
+Ci = 0.00000044         #Valor do teorema do chute
+Clinha = Cfixo * Ci
+
+N = 5000.0
+
+
+
+def f(t, y):
+    f1 = coef[0] * (1.0 - (y[0] / Clinha)) * y[6]  - (coef[1] + coef[4]) * y[0]        # Página 44, equação E(t)
+    f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
+    f3 = coef[2] * y[1]  - (coef[3] + coef[6] + coef[11]) * y[2]         # Página 44, equação P(t)
+    f4 = coef[3] * y[2] - (coef[13] * (y[8]  / N) + coef[7] + coef[12]) * y[3]         # Página 44, equação W1(t)
+    f5 = coef[13] * (y[8]  / N) * y[3]  - (coef[15] + coef[7] + coef[12]) * y[4]         # Página 44, equação W2(t)
+    f6 = coef[15] * y[4]  - (coef[7] + coef[12]) * y[5]         # Página 44, equação W3(t)
+    f7 = coef[19] * N - (coef[14] * (y[5]  / y[6] ) + coef[18]) * y[7]        # Página 45, equação s(t)
+    f8 = coef[14] * (y[5]  / y[6] ) * y[7]  - (coef[16] + coef[18]) * y[0]       # Página 45, equação e(t)
+    f9 = coef[16] * y[0]  - (coef[17] + coef[18]) * y[8]         # Página 45, equação i(t)
+    f10 = coef[17] * y[8]  - coef[18] * y[9]         # Página 45, equação r(t)
+    yFa = [f1,f2, f3, f4, f5, f6, f7, f8, f9, f10]
+    return yFa
+
 
 ##Esta eh a funcao que define as funcoes do problema
-def f(t,y):
+def fantigo(t,y):
     global coef 
-    # coef = [β,γ,μ,δ]
+    # coef = [Î²,Î³,Î¼,Î´]
     # y =[S,I]
-    # Essa é a SIS
+    # Essa Ã© a SIS
     f1 = -coef[0]*y[0]*y[1] + coef[1]*y[1] + coef[2]*(y[0] + y[1]) - coef[3]*y[0]
     f2 = coef[0]*y[0]*y[1] - coef[1]*y[1] - coef[3]*y[1]
     yFa = [f1,f2]
@@ -158,12 +183,25 @@ def kutta_exp (yk, fk, h, y0, f0, t, x):
 remove_file()
 
 ##Inicializacao das variaveis
+
+
 t = 0
 h = 0.002
-y01 = 100
-y02 = 30
 
-Y0 = [y01,y02]
+Et = 100
+Lt = 200
+Pt = 300
+W1t = 100
+W2t = 100
+W3t = 200
+Wt = W1t + W2t + W3t
+St = 2
+It = 3 
+Rt = 4
+
+
+
+Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t), float(Wt), float(St), float(It), float(Rt)]
 
 
 #Com um passo eu resolvo range Kutta de segunda ordem
