@@ -121,11 +121,12 @@ Cfixo = 700.0     #Valor referente ao periodo favoravel
 Ci = 0.00000044         #Valor do teorema do chute
 Clinha = Cfixo * Ci
 
-N = 5000.0
+N = 500000.0
 
 
 
 def f(t, y):
+    print(t)
     f1 = coef[0] * (1.0 - (y[0] / Clinha)) * y[6]  - (coef[1] + coef[4]) * y[0]        # Página 44, equação E(t)
     f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
     f3 = coef[2] * y[1]  - (coef[3] + coef[6] + coef[11]) * y[2]         # Página 44, equação P(t)
@@ -140,18 +141,6 @@ def f(t, y):
     return yFa
 
 
-##Esta eh a funcao que define as funcoes do problema
-def fantigo(t,y):
-    global coef 
-    # coef = [Î²,Î³,Î¼,Î´]
-    # y =[S,I]
-    # Essa Ã© a SIS
-    f1 = -coef[0]*y[0]*y[1] + coef[1]*y[1] + coef[2]*(y[0] + y[1]) - coef[3]*y[0]
-    f2 = coef[0]*y[0]*y[1] - coef[1]*y[1] - coef[3]*y[1]
-    yFa = [f1,f2]
-    return yFa
-
-
 ##Funcao que resolve o metodo de Range Kutta
 def range_kutta(y, h, t):
     a = f(t, y)
@@ -161,6 +150,7 @@ def range_kutta(y, h, t):
     y1 = kutta(y, h, d)
     write_file(y1)
     return y1
+
 
 #Metodo explicito.
 #YK Atual, FK Atual, H, Y anterior, F anterior
@@ -173,6 +163,7 @@ def kutta_exp (yk, fk, h, y0, f0, t, x):
         print("Y"+ str(x) + ":")
         print(yn)
         write_file(yn)
+        t = t+h
         kutta_exp(yn, f(t, yn), h, yk, f(t,yk), t, x+1)
         
 
@@ -186,7 +177,7 @@ remove_file()
 
 
 t = 0
-h = 0.002
+h = 0.02
 
 Et = 100
 Lt = 200
