@@ -53,6 +53,7 @@ import os
 
 
 # ARRAY DE PARÂMETROS COM OS VALORES EXTRAÍDOS DA TABELA 1 DA PÁGINA 46:
+#        0     1     2     3      4     5      6      7      8     9     10  11    12   13    14    15    16   17      18         19
 coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0, 0.0, 0.75, 0.375, 0.2, 0.1, 0.143, 0.000042, 0.00042]
 
 
@@ -62,6 +63,7 @@ coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0
 
 
 #Valores iniciais
+iteracoes = 100000
 
 t = 0
 h = 0.02
@@ -80,7 +82,7 @@ Rt = 4
 Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t), float(Wt), float(St), float(It), float(Rt)]
 
 
-Cfixo = 700.0     #Valor referente ao periodo favoravel
+Cfixo = 700.0     #Valor referente ao periodo favoravel   || Cfixo = 500 -> Intermediário || Cfico = 300 -> desfavorável
 Ci = 0.00000044         #Valor do teorema do chute
 Clinha = Cfixo * Ci     #capacidade de suporte ambiental
 
@@ -127,6 +129,7 @@ def kutta(yk, h, f):
 
 def f(t, y):
     print(t)
+
     f1 = coef[0] * (1.0 - (y[0] / Clinha)) * y[6]  - (coef[1] + coef[4]) * y[0]        # Página 44, equação E(t)
     f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
     f3 = coef[2] * y[1]  - (coef[3] + coef[6] + coef[11]) * y[2]         # Página 44, equação P(t)
@@ -152,10 +155,11 @@ def range_kutta(y, h, t):
     return y1
 
 
-#Metodo explicito.
+#Metodo explicito recursivo
 #YK Atual, FK Atual, H, Y anterior, F anterior
 def kutta_exp (yk, fk, h, y0, f0, t, x):
-    if x <= 10:
+    global iteracoes
+    if x < iteracoes:
         y1 = escalarXvetor(3,fk)
         y2 = subvetor(y1,f0)
         y3 = escalarXvetor(h/2, y2)
@@ -164,8 +168,25 @@ def kutta_exp (yk, fk, h, y0, f0, t, x):
         print(yn)
         write_file(yn)
         t = t+h
-        kutta_exp(yn, f(t, yn), h, yk, f(t,yk), t, x+1)
+        kutta_exp(yn, f(t, yn), h, yk, f(t,yk), t, x + 1)
         
+#Metodo explicito iterativo
+#YK Atual, FK Atual, H, Y anterior, F anterior
+def kutta_exp_iter (yk, fk, h, y0, f0, t, iteracoes):
+    for i in range(0,iteracoes):
+        y1 = escalarXvetor(3,fk)
+        y2 = subvetor(y1,f0)
+        y3 = escalarXvetor(h/2, y2)
+        yn = somaVetor(yk,y3)
+        print("Y"+ str(i) + ":")
+        print(yn)
+        write_file(yn)
+        t = t+h
+        fk = f(t,yn)
+        y0 = yk
+        f0 = f(t,yk)
+        yk = yn
+
 
 ##############################
 ######## Programa ############
@@ -181,5 +202,9 @@ print(Y0)
 print("Y1: ")
 print(Y1)
 
-#Metodo explicito! 
-resp = kutta_exp(Y1, f(t, Y1), h, Y0, f(t, Y0), t, 2)
+# Metodo explicito! 
+resp = kutta_exp(Y1, f(t, Y1), h, Y0, f(t, Y0), t, 0)
+
+# Método explícito iterativo!
+iterkutta = kutta_exp_iter(Y1, f(t, Y1), h, Y0, f(t, Y0), t, iteracoes)
+
