@@ -63,7 +63,7 @@ coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0
 
 
 #Valores iniciais
-iteracoes = 100000
+iteracoes = 72000
 
 t = 0
 h = 0.02
@@ -128,7 +128,7 @@ def kutta(yk, h, f):
     return somaVetor(yk, v1)
 
 def f(t, y):
-    print(t)
+    
 
     f1 = coef[0] * (1.0 - (y[0] / Clinha)) * y[6]  - (coef[1] + coef[4]) * y[0]        # Página 44, equação E(t)
     f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
@@ -203,7 +203,7 @@ print("Y1: ")
 print(Y1)
 
 # Metodo explicito! 
-resp = kutta_exp(Y1, f(t, Y1), h, Y0, f(t, Y0), t, 0)
+#resp = kutta_exp(Y1, f(t, Y1), h, Y0, f(t, Y0), t, 0)
 
 # Método explícito iterativo!
 iterkutta = kutta_exp_iter(Y1, f(t, Y1), h, Y0, f(t, Y0), t, iteracoes)
