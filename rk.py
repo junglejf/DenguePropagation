@@ -3,6 +3,7 @@
 
 import matplotlib.pyplot
 import os
+from decimal import Decimal  
 
 # LISTA DE EQUAÇÕES PÁGINAS 44 E 45 (FALTA TERMINAR):
 
@@ -63,17 +64,18 @@ coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0
 
 
 #Valores iniciais
-iteracoes = 24
+iteracoes = 2880
 
 t = 0
-h = 0.04
+h = 0.01
+x = (1 *h)/0.04
 
-Et = 10
+Et = 50
 Lt = 20
-Pt = 100
-W1t = 11
+Pt = 30
+W1t = 29
 W2t = 12
-W3t = 13
+W3t = 17
 Wt = W1t + W2t + W3t
 St = 2
 It = 3 
@@ -84,7 +86,7 @@ Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t)]
 
 Cfixo = 700.0     #Valor referente ao periodo favoravel   || Cfixo = 500 -> Intermediário || Cfico = 300 -> desfavorável
 Ci = 0.0014         #Valor do teorema do chute
-Clinha = Cfixo * Ci     #capacidade de suporte ambiental
+Clinha = 0.98     #capacidade de suporte ambiental
 
 N = 500000.0 #Populacao humana
 
@@ -152,6 +154,9 @@ def f(t, y):
 
 ##Funcao que resolve o metodo de Range Kutta
 def range_kutta(y, h, t):
+    write_file(y)
+    YN.append(y)
+    TN.append(t)
     a = f(t, y)
     b = kutta(y, h/2, a)
     c = t + h/2
@@ -213,18 +218,37 @@ def filtrar_variavel (YN,indicesYN):
     return filtro
 
 # Função que plotta um gráfico
-def desenha_grafico (titulo,eixoX, eixoY, nome_eixoX, nome_eixoY):
+def desenha_grafico (titulo,eixoX, eixo, nome_eixoX, nome_eixoY):
     matplotlib.pyplot.title(titulo)
-    matplotlib.pyplot.plot(eixoX, eixoY)
+    if type (eixo) is list: # se for um conjunto de valores a serem plotados
+        for item in eixo: # (x, y[N] )
+            matplotlib.pyplot.plot(eixoX,item)
+    else: # se for somente um valor (x,y)
+        matplotlib.pyplot.plot(eixoX,eixo)
+
     matplotlib.pyplot.ylabel(nome_eixoY)
     matplotlib.pyplot.xlabel(nome_eixoX)
     matplotlib.pyplot.show()
 
+
+def eixos (matriz, vetor):
+    resp = []
+    for i in range(0, len(vetor)):
+        resp.append([])
+    for linha in matriz:
+        for i in range(0, len(linha)):
+            if vetor[i]:
+                resp[i].append(linha[i])
+    resp2 = []
+    for item in resp:
+        if item != []:
+            resp2.append(item)
+    return resp2
 ##############################
 ######## Programa ############
 ##############################
 
-#remove_file()
+remove_file()
 
 #Com um passo eu resolvo range Kutta de segunda ordem
 Y1 = range_kutta(Y0, h, t)
@@ -238,12 +262,18 @@ print(Y1)
 #resp = kutta_exp(Y1, f(t, Y1), h, Y0, f(t, Y0), t, 0)
 
 # Método explícito iterativo!
-iterkutta = kutta_exp_iter(Y1, f(t, Y1), h, Y0, f(t, Y0), t, iteracoes)
+iterkutta = kutta_exp_iter(Y1, f(t, Y1), h, Y0, f(t, Y0), t+h, iteracoes)
 
 ## GRÁFICO ##
 filtro = [0,0,0,1,1,1] # selecionar w1,w2,w3
 eixoY = filtrar_variavel(YN,filtro) # <--- W(t)
-titulo = ('Populacao Mosquitos Adultos num periodo de 24h')
+titulo = ('Populacao Mosquitos Adultos num periodo de 4 meses')
 nome_eixoY = ('Quantidade de Mosquito Adulto')
 nome_eixoX = ('Tempo em hora')
-desenha_grafico (titulo,TN, eixoY, nome_eixoX, nome_eixoY )
+eixo = eixos(YN, filtro)
+desenha_grafico (titulo,TN, eixo, nome_eixoX, nome_eixoY )
+
+
+
+
+
