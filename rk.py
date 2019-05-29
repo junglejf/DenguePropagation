@@ -86,7 +86,7 @@ Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t)]
 
 Cfixo = 700.0     #Valor referente ao periodo favoravel   || Cfixo = 500 -> Intermediário || Cfico = 300 -> desfavorável
 Ci = 0.0014         #Valor do teorema do chute
-Clinha = 0.98     #capacidade de suporte ambiental
+Clinha = Cfixo * Ci     #capacidade de suporte ambiental
 
 N = 500000.0 #Populacao humana
 
@@ -136,6 +136,11 @@ def f(t, y):
 #           y[0] ,    y[1]  ,  y[2]    ,  y[3]     ,    y[4]   , y[5]      ,  y[6]    ,   y[7]   ,  y[8]    ,  y[9]                
     
     ## Mosquito ##
+    global Cfixo
+    if(t > 720 and t < 2000):
+        Cfixo = 500
+    elif ( t>2000):
+        Cfixo = 300
     f1 = coef[0] * (1.0 - (y[0] / Clinha)) * ( (y[3]+y[4]+y[5])  - (coef[1] + coef[4]) * y[0] )       # Página 44, equação E(t)
     f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
     f3 = coef[2] * y[1]  - (coef[3] + coef[6] + coef[11]) * y[2]         # Página 44, equação P(t)
@@ -269,7 +274,7 @@ filtro = [0,0,0,1,1,1] # selecionar w1,w2,w3
 eixoY = filtrar_variavel(YN,filtro) # <--- W(t)
 titulo = ('Populacao Mosquitos Adultos num periodo de 4 meses')
 nome_eixoY = ('Quantidade de Mosquito Adulto')
-nome_eixoX = ('Tempo em hora')
+nome_eixoX = ('Tempo')
 eixo = eixos(YN, filtro)
 desenha_grafico (titulo,TN, eixo, nome_eixoX, nome_eixoY )
 
