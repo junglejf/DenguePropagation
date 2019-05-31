@@ -64,18 +64,21 @@ coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0
 
 
 #Valores iniciais
-iteracoes = 2880
+dias = 720.0
+h = 0.01
+iteracoes = int(dias/h )
 
 t = 0
-h = 0.01
+
 x = (1 *h)/0.04
 
-Et = 50
-Lt = 20
-Pt = 30
-W1t = 29
+Et = 0
+Lt = 0
+Pt = 0
+W1t = 2
 W2t = 12
 W3t = 17
+
 Wt = W1t + W2t + W3t
 St = 2
 It = 3 
@@ -86,7 +89,7 @@ Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t)]
 
 Cfixo = 700.0     #Valor referente ao periodo favoravel   || Cfixo = 500 -> Intermediário || Cfico = 300 -> desfavorável
 Ci = 0.0014         #Valor do teorema do chute
-Clinha = Cfixo * Ci     #capacidade de suporte ambiental
+Clinha = 1     #capacidade de suporte ambiental
 
 N = 500000.0 #Populacao humana
 
@@ -144,8 +147,8 @@ def f(t, y):
     f1 = coef[0] * (1.0 - (y[0] / Clinha)) * ( (y[3]+y[4]+y[5])  - (coef[1] + coef[4]) * y[0] )       # Página 44, equação E(t)
     f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
     f3 = coef[2] * y[1]  - (coef[3] + coef[6] + coef[11]) * y[2]         # Página 44, equação P(t)
-    f4 = coef[3] * y[2] - (coef[13] * (0  / N) + coef[7] + coef[12]) * y[3]         # Página 44, equação W1(t)
-    f5 = coef[13] * (0  / N) * y[3]  - (coef[15] + coef[7] + coef[12]) * y[4]         # Página 44, equação W2(t)
+    f4 = coef[3] * y[2] - (coef[13] * (0* N) + coef[7] + coef[12]) * y[3]         # Página 44, equação W1(t)
+    f5 = coef[13] * (0* N) * y[3]  - (coef[15] + coef[7] + coef[12]) * y[4]         # Página 44, equação W2(t)
     f6 = coef[15] * y[4]  - (coef[7] + coef[12]) * y[5]         # Página 44, equação W3(t)
     
     ## Humanos ##
@@ -270,7 +273,7 @@ print(Y1)
 iterkutta = kutta_exp_iter(Y1, f(t, Y1), h, Y0, f(t, Y0), t+h, iteracoes)
 
 ## GRÁFICO ##
-filtro = [0,0,0,1,1,1] # selecionar w1,w2,w3
+filtro = [0,1,0,1,1,1] # selecionar w1,w2,w3
 eixoY = filtrar_variavel(YN,filtro) # <--- W(t)
 titulo = ('Populacao Mosquitos Adultos num periodo de 4 meses')
 nome_eixoY = ('Quantidade de Mosquito Adulto')
