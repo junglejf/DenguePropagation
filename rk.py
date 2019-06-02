@@ -64,7 +64,7 @@ coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0
 
 
 #Valores iniciais
-dias = 720.0
+dias = 7200.0
 h = 0.01
 iteracoes = int(dias/h )
 
@@ -144,12 +144,12 @@ def f(t, y):
         Cfixo = 500
     elif ( t>2000):
         Cfixo = 300
-    f1 = coef[0] * (1.0 - (y[0] / Clinha)) * ( (y[3]+y[4]+y[5])  - (coef[1] + coef[4]) * y[0] )       # Página 44, equação E(t)
-    f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
-    f3 = coef[2] * y[1]  - (coef[3] + coef[6] + coef[11]) * y[2]         # Página 44, equação P(t)
-    f4 = coef[3] * y[2] - (coef[13] * (0* N) + coef[7] + coef[12]) * y[3]         # Página 44, equação W1(t)
-    f5 = coef[13] * (0* N) * y[3]  - (coef[15] + coef[7] + coef[12]) * y[4]         # Página 44, equação W2(t)
-    f6 = coef[15] * y[4]  - (coef[7] + coef[12]) * y[5]         # Página 44, equação W3(t)
+    f1 = coef[0] * ((1.0 - (y[0] / Clinha)) * (y[3]+y[4]+y[5]))  - ((coef[1] + coef[4]) * y[0])       # Página 44, equação E(t)
+    f2 = (coef[1] * y[0]) - ((coef[2] + coef[5] + coef[10]) * y[1])         # Página 44, equação L(t)
+    f3 = (coef[2] * y[1])  - ((coef[3] + coef[6] + coef[11]) * y[2])         # Página 44, equação P(t)
+    f4 = (coef[3] * y[2]) - (((coef[13] * (0/N)) + coef[7] + coef[12]) * y[3])         # Página 44, equação W1(t)
+    f5 = (coef[13] * (0/N) * y[3])  - ((coef[15] + coef[7] + coef[12]) * y[4])         # Página 44, equação W2(t)
+    f6 = (coef[15] * y[4])  - ((coef[7] + coef[12]) * y[5])         # Página 44, equação W3(t)
     
     ## Humanos ##
     #f7 = coef[19] * N - (coef[14] * (y[5]  / y[6] ) + coef[18]) * y[7]        # Página 45, equação s(t)
