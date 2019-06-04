@@ -164,7 +164,7 @@ def f(t, y):
     
     if(t > 120 and t < 240 and Cfixo != 300):
         Cfixo = 300
-<<<<<<< HEAD
+
         atualiza_coeficientes()
     elif ( t > 240 and t < 480 and Cfixo != 500):
         Cfixo = 500
@@ -231,7 +231,7 @@ def kutta_exp_iter (yk, fk, h, y0, f0, t, iteracoes):
         print("Y"+ str(i) + ":")
         print(yn)
         print("t = "+str(t))
-        write_file(yn)
+        #write_file(yn)
         YN.append(yn)
         TN.append(i)
         t = t+h
@@ -291,7 +291,7 @@ def eixos (matriz, vetor):
 ######## Programa ############
 ##############################
 
-remove_file()
+#remove_file()
 
 #Com um passo eu resolvo range Kutta de segunda ordem
 Y1 = range_kutta(Y0, h, t)
