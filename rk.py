@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: latin-1 -*-
 
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 import os
 from decimal import Decimal  
 
@@ -57,6 +57,24 @@ from decimal import Decimal
 #        0     1     2     3      4     5      6      7      8     9     10  11    12   13    14    15    16   17      18         19
 coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0, 0.0, 0.75, 0.375, 0.2, 0.1, 0.143, 0.000042, 0.00042]
 
+def atualiza_coeficientes():
+    global Cfixo
+    global coef
+    if (Cfixo == 700): # (D) favorável
+        coef[1] = 0.33
+        coef[2] = 0.14
+        coef[3] = 0.346
+        coef[7] = 0.042
+    elif (Cfixo == 500): # (I) intermediário
+        coef[1] = 0.2
+        coef[2] = 0.066
+        coef[3] = 0.0091
+        coef[7] = 0.059
+    else :              # (D) desfavorável
+        coef[1] = 0.3
+        coef[2] = 0.125
+        coef[3] = 0.323
+        coef[7] = 0.04
 
 ##############################
 #Inicializacao das variaveis#
@@ -65,7 +83,7 @@ coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0
 
 #Valores iniciais
 dias = 720.0
-h = 0.01
+h = 0.1
 iteracoes = int(dias/h )
 
 t = 0
@@ -76,7 +94,7 @@ Et = 0
 Lt = 0
 Pt = 0
 W1t = 2
-W2t = 12
+W2t = 50
 W3t = 17
 
 Wt = W1t + W2t + W3t
@@ -89,7 +107,8 @@ Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t)]
 
 Cfixo = 700.0     #Valor referente ao periodo favoravel   || Cfixo = 500 -> Intermediário || Cfico = 300 -> desfavorável
 Ci = 0.0014         #Valor do teorema do chute
-Clinha = 1     #capacidade de suporte ambiental
+Clinha = Ci * Cfixo     #capacidade de suporte ambiental
+atualiza_coeficientes()
 
 N = 500000.0 #Populacao humana
 
@@ -140,16 +159,25 @@ def f(t, y):
     
     ## Mosquito ##
     global Cfixo
-    if(t > 720 and t < 2000):
-        Cfixo = 500
-    elif ( t>2000):
+    global coef
+    
+    if(t > 120 and t < 240 and Cfixo != 300):
         Cfixo = 300
-    f1 = coef[0] * (1.0 - (y[0] / Clinha)) * ( (y[3]+y[4]+y[5])  - (coef[1] + coef[4]) * y[0] )       # Página 44, equação E(t)
+        atualiza_coeficientes()
+    elif ( t > 240 and t < 480 and Cfixo != 500):
+        Cfixo = 500
+        atualiza_coeficientes()
+    elif( t >= 480 and Cfixo != 700):
+        Cfixo = 700
+        atualiza_coeficientes()
+    
+    
+    f1 = coef[0] * ((1.0 - (y[0] / Clinha)) * (y[3]+y[4]+y[5])) - ((coef[1] + coef[4]) * y[0])        # Página 44, equação E(t)
     f2 = coef[1] * y[0] - (coef[2] + coef[5] + coef[10]) * y[1]         # Página 44, equação L(t)
     f3 = coef[2] * y[1]  - (coef[3] + coef[6] + coef[11]) * y[2]         # Página 44, equação P(t)
-    f4 = coef[3] * y[2] - (coef[13] * (0* N) + coef[7] + coef[12]) * y[3]         # Página 44, equação W1(t)
-    f5 = coef[13] * (0* N) * y[3]  - (coef[15] + coef[7] + coef[12]) * y[4]         # Página 44, equação W2(t)
-    f6 = coef[15] * y[4]  - (coef[7] + coef[12]) * y[5]         # Página 44, equação W3(t)
+    f4 = (coef[3] * y[2])- (coef[13] * (0* N) + coef[7] + coef[12]) * y[3]         # Página 44, equação W1(t)
+    f5 = (coef[13] * (0* N) * y[3])  - ((coef[15] + coef[7] + coef[12]) * y[4])         # Página 44, equação W2(t)
+    f6 = (coef[15] * y[4])  - ((coef[7] + coef[12]) * y[5])         # Página 44, equação W3(t)
     
     ## Humanos ##
     #f7 = coef[19] * N - (coef[14] * (y[5]  / y[6] ) + coef[18]) * y[7]        # Página 45, equação s(t)
@@ -226,17 +254,19 @@ def filtrar_variavel (YN,indicesYN):
     return filtro
 
 # Função que plotta um gráfico
-def desenha_grafico (titulo,eixoX, eixo, nome_eixoX, nome_eixoY):
-    matplotlib.pyplot.title(titulo)
+def desenha_grafico (titulo,eixoX, eixo, nome_eixoX, nome_eixoY, nome_das_curvas):
+    grafico = plt.figure()
+    plt.title(titulo)
     if type (eixo) is list: # se for um conjunto de valores a serem plotados
         for item in eixo: # (x, y[N] )
-            matplotlib.pyplot.plot(eixoX,item)
+            plt.plot(eixoX,item , label = nome_das_curvas.pop(0))
     else: # se for somente um valor (x,y)
-        matplotlib.pyplot.plot(eixoX,eixo)
+        plt.plot(eixoX,eixo)
 
-    matplotlib.pyplot.ylabel(nome_eixoY)
-    matplotlib.pyplot.xlabel(nome_eixoX)
-    matplotlib.pyplot.show()
+    plt.ylabel(nome_eixoY)
+    plt.xlabel(nome_eixoX)
+    #plt.show()
+    return grafico
 
 
 def eixos (matriz, vetor):
@@ -252,6 +282,9 @@ def eixos (matriz, vetor):
         if item != []:
             resp2.append(item)
     return resp2
+
+
+
 ##############################
 ######## Programa ############
 ##############################
@@ -273,13 +306,16 @@ print(Y1)
 iterkutta = kutta_exp_iter(Y1, f(t, Y1), h, Y0, f(t, Y0), t+h, iteracoes)
 
 ## GRÁFICO ##
-filtro = [0,1,0,1,1,1] # selecionar w1,w2,w3
+filtro = [1,1,1,1,1,1] # selecionar w1,w2,w3
 eixoY = filtrar_variavel(YN,filtro) # <--- W(t)
 titulo = ('Populacao Mosquitos Adultos num periodo de 4 meses')
 nome_eixoY = ('Quantidade de Mosquito Adulto')
 nome_eixoX = ('Tempo')
+nome_das_curvas = ['ovo','larva','pupa','Mosquito suscetivel(W1)','Mosquito exposto(W2)','Mosquito infectado(W3)']
 eixo = eixos(YN, filtro)
-desenha_grafico (titulo,TN, eixo, nome_eixoX, nome_eixoY )
+graf = desenha_grafico (titulo,TN, eixo, nome_eixoX, nome_eixoY, nome_das_curvas )
+plt.legend()
+plt.show()
 
 
 
