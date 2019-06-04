@@ -202,6 +202,19 @@ def range_kutta(y, h, t):
     #write_file(y1)
     return y1
 
+##Funcao que resolve o metodo de Range Kutta Iterativo
+def range_kutta_iterativo(y, h, t, q):
+    for i in range(0, q):
+        YN.append(y)
+        TN.append(t)
+        a = f(t, y)
+        b = kutta(y, h/2, a)
+        c = t + h/2
+        d = f(c, b)
+        y1 = kutta(y, h, d)
+        y = y1
+        t = t + h
+
 
 #Metodo explicito recursivo
 #YK Atual, FK Atual, H, Y anterior, F anterior
@@ -293,7 +306,13 @@ def eixos (matriz, vetor):
 #remove_file()
 
 #Com um passo eu resolvo range Kutta de segunda ordem
-Y1 = range_kutta(Y0, h, t)
+
+#FUNCIONA!!!! INICIO DO EXPLICITO - RK
+#Y1 = range_kutta(Y0, h, t)
+
+#TESTE PARA RK ONLY
+range_kutta_iterativo(Y0, h, t, iteracoes)
+
 
 print("Y0: ")
 print(Y0)
