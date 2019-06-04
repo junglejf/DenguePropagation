@@ -87,16 +87,15 @@ h = 0.01
 
 iteracoes = int(dias/h )
 
-t = 0
-
+t = 0 
 x = (1 *h)/0.04
 
-Et = 0
-Lt = 0
-Pt = 0
-W1t = 2
-W2t = 50
-W3t = 17
+Et = 0.0
+Lt = 0.0
+Pt = 0.0
+W1t = 2.0
+W2t = 50.0
+W3t = 17.0
 
 Wt = W1t + W2t + W3t
 St = 2
@@ -161,15 +160,15 @@ def f(t, y):
     ## Mosquito ##
     global Cfixo
     global coef
-    
-    if(t > 120 and t < 240 and Cfixo != 300):
+    ano_anterior = int(int(t)/360)*360 # quando mudar de ano retorna os períodos F,I,D
+    #print(t,ano_anterior)
+    if(t > 120 + ano_anterior and t <= 240 + ano_anterior and Cfixo != 300):
         Cfixo = 300
-
         atualiza_coeficientes()
-    elif ( t > 240 and t < 480 and Cfixo != 500):
+    elif ( t > 240 + ano_anterior and t <= 360 + ano_anterior and Cfixo != 500):
         Cfixo = 500
         atualiza_coeficientes()
-    elif( t >= 480 and Cfixo != 700):
+    elif( t <= 120 + ano_anterior and Cfixo != 700):
         Cfixo = 700
         atualiza_coeficientes()
 
@@ -178,7 +177,7 @@ def f(t, y):
     f2 = (coef[1] * y[0]) - ((coef[2] + coef[5] + coef[10]) * y[1])         # Página 44, equação L(t)
     f3 = (coef[2] * y[1])  - ((coef[3] + coef[6] + coef[11]) * y[2])         # Página 44, equação P(t)
     f4 = (coef[3] * y[2]) - (((coef[13] * (0/N)) + coef[7] + coef[12]) * y[3])         # Página 44, equação W1(t)
-    f5 = (coef[13] * (0/N) * y[3])  - ((coef[15] + coef[7] + coef[12]) * y[4])         # Página 44, equação W2(t)
+    f5 = (coef[13] * (N*0.5/N) * y[3])  - ((coef[15] + coef[7] + coef[12]) * y[4])         # Página 44, equação W2(t)
     f6 = (coef[15] * y[4])  - ((coef[7] + coef[12]) * y[5])         # Página 44, equação W3(t)
     
     ## Humanos ##
@@ -192,7 +191,7 @@ def f(t, y):
 
 ##Funcao que resolve o metodo de Range Kutta
 def range_kutta(y, h, t):
-    write_file(y)
+    #write_file(y)
     YN.append(y)
     TN.append(t)
     a = f(t, y)
@@ -200,7 +199,7 @@ def range_kutta(y, h, t):
     c = t + h/2
     d = f(c, b)
     y1 = kutta(y, h, d)
-    write_file(y1)
+    #write_file(y1)
     return y1
 
 
@@ -228,12 +227,12 @@ def kutta_exp_iter (yk, fk, h, y0, f0, t, iteracoes):
         y2 = subvetor(y1,f0)
         y3 = escalarXvetor(h/2, y2)
         yn = somaVetor(yk,y3)
-        print("Y"+ str(i) + ":")
-        print(yn)
-        print("t = "+str(t))
+        #print("Y"+ str(i) + ":")
+        #print(yn)
+        #print("t = "+str(t))
         #write_file(yn)
         YN.append(yn)
-        TN.append(i)
+        TN.append(t)
         t = t+h
         fk = f(t,yn)
         y0 = yk
@@ -270,7 +269,7 @@ def desenha_grafico (titulo,eixoX, eixo, nome_eixoX, nome_eixoY, nome_das_curvas
     #plt.show()
     return grafico
 
-
+#define os eixos a serem plotados
 def eixos (matriz, vetor):
     resp = []
     for i in range(0, len(vetor)):
@@ -310,16 +309,12 @@ iterkutta = kutta_exp_iter(Y1, f(t, Y1), h, Y0, f(t, Y0), t+h, iteracoes)
 ## GRÁFICO ##
 filtro = [1,1,1,1,1,1] # selecionar w1,w2,w3
 eixoY = filtrar_variavel(YN,filtro) # <--- W(t)
-titulo = ('Populacao Mosquitos Adultos num periodo de 4 meses')
-nome_eixoY = ('Quantidade de Mosquito Adulto')
-nome_eixoX = ('Tempo')
+titulo = ('Variacao da populacao de Mosquitos por dias')
+nome_eixoY = ('Quantidade de Mosquitos por Tipo (M)')
+nome_eixoX = ('Dias')
 nome_das_curvas = ['ovo','larva','pupa','Mosquito suscetivel(W1)','Mosquito exposto(W2)','Mosquito infectado(W3)']
 eixo = eixos(YN, filtro)
 graf = desenha_grafico (titulo,TN, eixo, nome_eixoX, nome_eixoY, nome_das_curvas )
 plt.legend()
 plt.show()
-
-
-
-
 
