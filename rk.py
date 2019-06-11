@@ -176,10 +176,6 @@ def passos_multiplos_explicito_iterativo(yk, fk, h, y0, f0, t, iteracoes):
         y2 = subvetor(y1, f0)
         y3 = escalarXvetor(h/2, y2)
         yn = somaVetor(yk, y3)
-        #print("Y"+ str(i) + ":")
-        #print(yn)
-        #print("t = "+str(t))
-        #write_file(yn)
         YN.append(yn)
         TN.append(t)
         t = t + h
