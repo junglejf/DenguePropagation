@@ -48,6 +48,9 @@ Y0 = [float(Et), float(Lt), float(Pt), float(W1t), float(W2t), float(W3t)]
 Cfixo = 700.0     #Valor referente ao periodo favoravel   || Cfixo = 500 -> Intermediário || Cfico = 300 -> desfavorável
 Ci = 0.5       #Valor do teorema do chute
 Clinha = Ci * Cfixo     #capacidade de suporte ambiental
+ ARRAY DE PARÂMETROS COM OS VALORES EXTRAÍDOS DA TABELA 1 coeficientes DA PÁGINA 46:
+#        0     1     2     3      4     5      6      7      8     9     10  11    12   13    14    15    16   17      18         19
+coef = [1.0, 0.33, 0.14, 0.346, 0.05, 0.05, 0.0167, 0.042, 0.04, 0.059, 0.0, 0.0, 0.0, 0.75, 0.375, 0.2, 0.1, 0.143, 0.000042, 0.00042]
 ```
 
 Após a seleção dos parâmetros o passo seguinte é a execução do método implícito runge-kutta 1 vez para podermos executar o método explícito de passos múltiplo 2.
